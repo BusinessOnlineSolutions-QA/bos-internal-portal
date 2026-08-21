@@ -1,3 +1,4 @@
+//-------------Main File------------
 import React, { useState, useEffect, useCallback } from "react";
 import {
   QrCode, Smartphone, FileBarChart2, Users, ShieldCheck,
