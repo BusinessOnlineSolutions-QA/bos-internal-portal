@@ -120,7 +120,7 @@ export async function fetchOtpRequests({ own = true, userId } = {}) {
   let query = supabase
     .from("otp_requests")
     .select("*, profiles ( name )")
-    .order("requested_at", { ascending: false });
+    .order("requested_at", { ascending: false }).limit(10);
   if (own && userId) query = query.eq("requested_by", userId);
   const { data, error } = await query;
   if (error) throw error;
