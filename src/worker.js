@@ -62,7 +62,8 @@ async function handleSendOtp(request, env) {
     return json({ error: data.message || "Failed to send OTP" }, 502);
   }
 
-  return json({ otp: data.value, message: data.message });
+  return json({ otp: data.value, message: data.message, _debug_url_tail: env.OTP_API_URL.slice(-25) });
+  // return json({ otp: data.value, message: data.message });
 }
 
 function json(obj, status = 200) {
