@@ -42,8 +42,7 @@ async function handleSendOtp(request, env) {
       },
       body: JSON.stringify({
         mobileOrEmailID: mobile,
-        // Adjust via the OTP_TYPE secret/var if your API expects a different value
-        otP_Type: env.OTP_TYPE || "Mobile",
+        otP_Type: "Mobile"
       }),
     });
   } catch (e) {
