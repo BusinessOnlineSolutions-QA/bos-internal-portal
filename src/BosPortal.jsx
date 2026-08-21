@@ -262,9 +262,16 @@ function OtpModule({ profile, otpLog, setOtpLog, services, reports, setReports }
     if (!/^\d{10}$/.test(mobile)) return;
     setSending(true); setErr("");
     try {
-      const code = String(Math.floor(100000 + Math.random() * 900000));
-      const created = await addOtpRequest(mobile, code, profile.id);
-      setOtpLog([created, ...otpLog]);
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+
+      const created = await addOtpRequest(mobile, data.otp, profile.id);
+      setOtpLog([created, ...otpLog].slice(0, 10));
       setLastOtp(created);
 
       // Log this against the OTP Gateway service so it shows up in Reports.
