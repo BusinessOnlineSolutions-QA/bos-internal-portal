@@ -1029,13 +1029,11 @@ export default function BosPortal() {
   const modulesNav = NAV.filter((n) => !n.section && canSeeNav(n));
   const adminNav = NAV.filter((n) => n.section === "admin" && canSeeNav(n));
 
-  return (
+  return (  
     <div className="min-h-screen w-full flex" style={{ background: C.base }}>
       <div className="w-60 flex-shrink-0 flex flex-col" style={{ background: C.panel, borderRight: `1px solid ${C.border}` }}>
        <div className="px-5 py-5 flex items-center gap-2" style={{ borderBottom: `1px solid ${C.border}` }}>
-          <img src="/company_logo.png" alt="BOS logo" className="w-7 h-7 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
-          <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase">BOS Internal</div>
-        </div>
+          <img src="/Company_logo.png" alt="BOS logo" className="w-7 h-7 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
           <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase">BOS Internal</div>
         </div>
 
