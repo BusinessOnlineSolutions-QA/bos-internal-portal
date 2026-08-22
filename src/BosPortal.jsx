@@ -128,7 +128,7 @@ function Login() {
         }} />
       <div className="relative z-10 w-full max-w-sm px-6">
         <div className="flex items-center gap-2 mb-8 justify-center">
-          <img src="/Company_logo.png" alt="BOS logo" className="w-9 h-9 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
+          <img src="public/Company_logo.png" alt="BOS logo" className="w-9 h-9 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
           <div style={{ ...mono, color: C.text, letterSpacing: "0.1em" }} className="text-sm uppercase">BOS Internal</div>
         </div>
 
