@@ -115,6 +115,26 @@ export async function addLockitConfig(name, payload, createdBy) {
   return data;
 }
 
+// ---------------- Aopay ----------------
+export async function fetchAopayConfigs() {
+  const { data, error } = await supabase
+    .from("lockit_configs")
+    .select("*, profiles ( name )")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function addAopayConfig(name, payload, createdBy) {
+  const { data, error } = await supabase
+    .from("lockit_configs")
+    .insert({ name, payload, created_by: createdBy })
+    .select("*, profiles ( name )")
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 // ---------------- OTP ----------------
 export async function fetchOtpRequests({ own = true, userId } = {}) {
   let query = supabase
