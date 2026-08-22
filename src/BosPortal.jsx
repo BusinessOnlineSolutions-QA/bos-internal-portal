@@ -1034,7 +1034,7 @@ export default function BosPortal() {
       <div className="w-60 flex-shrink-0 flex flex-col" style={{ background: C.panel, borderRight: `1px solid ${C.border}` }}>
        <div className="px-5 py-5 flex items-center gap-2" style={{ borderBottom: `1px solid ${C.border}` }}>
           <img src="/company_logo.png" alt="BOS logo" className="w-7 h-7 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
-          <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase">BOS Internal</div>
+          <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase"><b>BOS Internal</b></div>
         </div>
 
         <div className="flex-1 py-4 px-3 overflow-y-auto">
