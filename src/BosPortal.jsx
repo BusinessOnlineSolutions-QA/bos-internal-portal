@@ -282,7 +282,7 @@ function AopayModule({ canManage, currentUserId, aopayConfigs, setAopayConfigs})
       <Eyebrow>Module 02</Eyebrow>
       <h1 style={{ color: C.text }} className="text-2xl font-semibold mb-1">LocKit application</h1>
       <p style={{ color: C.muted }} className="text-sm mb-6">
-        {canManage ? "Generate and manage the QR codes LocKit devices scan to authorize an application." : "QR codes issued for LocKit devices. Ask an admin if you need a new one generated."}
+        {canManage ? "Generate and manage the QR codes LocKit devices scan to authorize an application." : "QR codes issued for Aopay Finance devices. Ask an admin if you need a new one generated."}
       </p>
 
       <div className={canManage ? "grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-5" : ""}>
