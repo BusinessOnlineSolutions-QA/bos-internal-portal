@@ -128,9 +128,7 @@ function Login() {
         }} />
       <div className="relative z-10 w-full max-w-sm px-6">
         <div className="flex items-center gap-2 mb-8 justify-center">
-          <div className="w-9 h-9 rounded-md flex items-center justify-center" style={{ background: "rgba(180,83,9,0.1)", border: `1px solid ${C.amber}` }}>
-            <Lock size={16} color={C.amber} />
-          </div>
+          <img src="/Company_logo.png" alt="BOS logo" className="w-9 h-9 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
           <div style={{ ...mono, color: C.text, letterSpacing: "0.1em" }} className="text-sm uppercase">BOS Internal</div>
         </div>
 
@@ -280,7 +278,7 @@ function AopayModule({ canManage, currentUserId, aopayConfigs, setAopayConfigs})
   return (
     <div>
       <Eyebrow>Module 02</Eyebrow>
-      <h1 style={{ color: C.text }} className="text-2xl font-semibold mb-1">LocKit application</h1>
+      <h1 style={{ color: C.text }} className="text-2xl font-semibold mb-1">Aopay Finance Application</h1>
       <p style={{ color: C.muted }} className="text-sm mb-6">
         {canManage ? "Generate and manage the QR codes LocKit devices scan to authorize an application." : "QR codes issued for Aopay Finance devices. Ask an admin if you need a new one generated."}
       </p>
