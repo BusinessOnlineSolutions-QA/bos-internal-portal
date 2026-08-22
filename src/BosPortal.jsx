@@ -1096,7 +1096,7 @@ export default function BosPortal() {
         <div className="max-w-6xl mx-auto px-8 py-8">
           <ErrorBanner message={err} onDismiss={() => setErr("")} />
           {view === "lockit" && <LocKitModule canManage={isAdmin} currentUserId={profile.id} configs={configs} setConfigs={setConfigs} />}
-          {view === "aopay" && <AopayModule canManage={isAdmin} currentUserId={profile.id} configs={aopayConfigs} setConfigs={setAopayConfigs} />}
+          {view === "aopay" && <AopayModule canManage={isAdmin} currentUserId={profile.id} aopayConfigs={aopayConfigs} setAopayConfigs={setAopayConfigs} />}
           {view === "otp" && <OtpModule profile={profile} otpLog={otpLog} setOtpLog={setOtpLog} services={services} reports={reports} setReports={setReports} />}
           {view === "reports" && <ReportsModule reports={reports} services={services} />}
           {view === "admin-users" && isAdmin && <AdminUsers users={users} setUsers={setUsers} />}
