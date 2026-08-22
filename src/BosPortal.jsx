@@ -1,9 +1,8 @@
-//-------------Main File------------
 import React, { useState, useEffect, useCallback } from "react";
 import {
   QrCode, Smartphone, FileBarChart2, Users, ShieldCheck,
   PlusCircle, LayoutGrid, LogOut, Search, Eye, X,
-  Lock, RefreshCw, Copy, Check, Settings2, AlertTriangle
+  Lock, RefreshCw, Copy, Check, Settings2, AlertTriangle, Landmark
 } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import {
@@ -12,6 +11,7 @@ import {
   fetchProfile, fetchAllProfiles, updateProfileStatus, updateProfileRole,
   fetchServices, addService,
   fetchLockitConfigs, addLockitConfig,
+  fetchAopayConfigs, addAopayConfig,
   fetchOtpRequests, addOtpRequest,
   fetchServiceLogs, addServiceLog,
 } from "./db";
@@ -35,7 +35,7 @@ const mono = { fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menl
 
 // A role's access is expressed purely as module access — no per-service
 // checkbox, since that stops scaling once the Services directory grows.
-const MODULES = ["LocKit", "OTP", "Reports", "Users", "Services"];
+const MODULES = ["LocKit", "Aopay", "OTP", "Reports", "Users", "Services"];
 
 // ---------- small primitives ----------
 function Eyebrow({ children }) {
@@ -252,6 +252,92 @@ function LocKitModule({ canManage, currentUserId, configs, setConfigs }) {
   );
 }
 
+// ---------- Aopay Finance module ----------
+function AopayModule({ canManage, currentUserId, aopayConfigs, setAopayConfigs}) {
+  const [name, setName] = useState("");
+  const [payload, setPayload] = useState("");
+  const [copiedId, setCopiedId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  const generate = async () => {
+    if (!name.trim() || !payload.trim()) return;
+    setSaving(true); setErr("");
+    try {
+      const created = await addAopayConfig(name.trim(), payload.trim(), currentUserId);
+      setAopayConfigs([created, ...aopayConfigs]);
+      setName(""); setPayload("");
+    } catch (e) {
+      setErr(e.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const qrUrl = (data) => `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&bgcolor=FFFFFF&color=161B22&data=${encodeURIComponent(data)}`;
+  const fmt = (ts) => (ts ? new Date(ts).toISOString().slice(0, 16).replace("T", " ") : "");
+
+  return (
+    <div>
+      <Eyebrow>Module 02</Eyebrow>
+      <h1 style={{ color: C.text }} className="text-2xl font-semibold mb-1">LocKit application</h1>
+      <p style={{ color: C.muted }} className="text-sm mb-6">
+        {canManage ? "Generate and manage the QR codes LocKit devices scan to authorize an application." : "QR codes issued for LocKit devices. Ask an admin if you need a new one generated."}
+      </p>
+
+      <div className={canManage ? "grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-5" : ""}>
+        {canManage && (
+          <Panel className="p-5 h-fit">
+            <div style={{ color: C.text }} className="text-sm font-medium mb-4">New QR code</div>
+            <Field label="Application name">
+              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Warehouse Gate 4"
+                className="w-full rounded-md px-3 py-2 outline-none" style={inputStyle} />
+            </Field>
+            <Field label="Payload / access URL">
+              <textarea value={payload} onChange={(e) => setPayload(e.target.value)} placeholder="Aopay://auth/xxxx or a target URL" rows={3}
+                className="w-full rounded-md px-3 py-2 outline-none resize-none" style={inputStyle} />
+            </Field>
+            {err && <div style={{ color: C.red }} className="text-xs mb-3">{err}</div>}
+            <button onClick={generate} disabled={saving} className="w-full rounded-md py-2.5 text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+              style={{ background: C.amberBright, color: "#1A1400" }}>
+              {saving ? <RefreshCw size={15} className="animate-spin" /> : <QrCode size={15} />}
+              {saving ? "Generating…" : "Generate QR"}
+            </button>
+          </Panel>
+        )}
+
+        <div>
+          <div style={{ color: C.muted, ...mono }} className="text-xs uppercase mb-3 tracking-wide">{aopayConfigs.length} active codes</div>
+          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {aopayConfigs.map((c) => (
+              <Panel key={c.id} className="p-4">
+                <img src={qrUrl(c.payload)} alt={`QR for ${c.name}`} className="w-full rounded-md mb-3" style={{ background: C.panelAlt, border: `1px solid ${C.border}` }} />
+                <div style={{ color: C.text }} className="text-sm font-medium truncate">{c.name}</div>
+                <div style={{ color: C.muted, ...mono }} className="text-xs truncate mb-2">{c.payload}</div>
+                <div className="flex items-center justify-between">
+                  <span style={{ color: C.muted, ...mono }} className="text-[11px]">{fmt(c.created_at)}</span>
+                  <button onClick={() => { navigator.clipboard?.writeText(c.payload); setCopiedId(c.id); setTimeout(() => setCopiedId(null), 1200); }}
+                    style={{ color: C.blue }} className="text-xs flex items-center gap-1">
+                    {copiedId === c.id ? <Check size={12} /> : <Copy size={12} />}
+                    {copiedId === c.id ? "Copied" : "Copy payload"}
+                  </button>
+                </div>
+              </Panel>
+            ))}
+            {aopayConfigs.length === 0 && (
+              <Panel className="p-8 col-span-full text-center">
+                <div style={{ color: C.muted }} className="text-sm">{canManage ? "No QR codes yet. Create one on the left." : "No QR codes have been issued yet."}</div>
+              </Panel>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ---------- OTP module ----------
 function OtpModule({ profile, otpLog, setOtpLog, services, reports, setReports }) {
   const [mobile, setMobile] = useState("");
@@ -299,7 +385,7 @@ function OtpModule({ profile, otpLog, setOtpLog, services, reports, setReports }
 
   return (
     <div>
-      <Eyebrow>Module 02</Eyebrow>
+      <Eyebrow>Module 03</Eyebrow>
       <h1 style={{ color: C.text }} className="text-2xl font-semibold mb-1">API — OTP gateway</h1>
       <p style={{ color: C.muted }} className="text-sm mb-6">Enter a mobile number to trigger the OTP API. The generated code is shown here directly for testing.</p>
 
@@ -835,6 +921,7 @@ function AdminRBAC({ users, setUsers, roles, setRoles, rolePerms, setRolePerms }
 // ---------- Shell ----------
 const NAV = [
   { key: "lockit", label: "LocKit application", icon: QrCode, module: "LocKit" },
+  { key: "aopay", label: "Aopay Finance", icon: Landmark, module: "Aopay" },
   { key: "otp", label: "API — OTP", icon: Smartphone, module: "OTP" },
   { key: "reports", label: "Reports", icon: FileBarChart2, module: "Reports" },
   { key: "admin-users", label: "Users", icon: Users, module: "Users", section: "admin" },
@@ -851,6 +938,7 @@ export default function BosPortal() {
   const [users, setUsers] = useState([]);
   const [services, setServices] = useState([]);
   const [configs, setConfigs] = useState([]);
+  const [aopayConfigs, setAopayConfigs] = useState([]); 
   const [otpLog, setOtpLog] = useState([]);
   const [reports, setReports] = useState([]);
   const [view, setView] = useState(null);
@@ -863,7 +951,7 @@ export default function BosPortal() {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess);
       if (!sess) {
-        setProfile(null); setUsers([]); setServices([]); setConfigs([]);
+        setProfile(null); setUsers([]); setServices([]); setConfigs([]); setAopayConfigs([]);
         setOtpLog([]); setReports([]); setRolePerms({}); setRoles([]);
         setView(null); setDataReady(false);
       }
@@ -907,6 +995,7 @@ export default function BosPortal() {
         const tasks = [];
         if (isAdmin || can("Services")) tasks.push(fetchServices().then(setServices));
         if (isAdmin || can("LocKit")) tasks.push(fetchLockitConfigs().then(setConfigs));
+        if (isAdmin || can("Aopay")) tasks.push(fetchAopayConfigs().then(setAopayConfigs));
         if (isAdmin || can("OTP")) tasks.push(fetchOtpRequests({ own: !isAdmin, userId: profile.id }).then(setOtpLog));
         if (isAdmin || can("Reports")) tasks.push(fetchServiceLogs({ own: !isAdmin, userId: profile.id }).then(setReports));
         if (isAdmin) tasks.push(fetchAllProfiles().then(setUsers));
@@ -1007,6 +1096,7 @@ export default function BosPortal() {
         <div className="max-w-6xl mx-auto px-8 py-8">
           <ErrorBanner message={err} onDismiss={() => setErr("")} />
           {view === "lockit" && <LocKitModule canManage={isAdmin} currentUserId={profile.id} configs={configs} setConfigs={setConfigs} />}
+          {view === "aopay" && <AopayModule canManage={isAdmin} currentUserId={profile.id} configs={aopayConfigs} setConfigs={setAopayConfigs} />}
           {view === "otp" && <OtpModule profile={profile} otpLog={otpLog} setOtpLog={setOtpLog} services={services} reports={reports} setReports={setReports} />}
           {view === "reports" && <ReportsModule reports={reports} services={services} />}
           {view === "admin-users" && isAdmin && <AdminUsers users={users} setUsers={setUsers} />}
