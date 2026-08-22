@@ -128,7 +128,7 @@ function Login() {
         }} />
       <div className="relative z-10 w-full max-w-sm px-6">
         <div className="flex items-center gap-2 mb-8 justify-center">
-          <img src="public/Company_logo.png" alt="BOS logo" className="w-9 h-9 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
+          <img src="company_logo.png" alt="BOS logo" className="w-9 h-9 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
           <div style={{ ...mono, color: C.text, letterSpacing: "0.1em" }} className="text-sm uppercase">BOS Internal</div>
         </div>
 
@@ -156,10 +156,6 @@ function Login() {
               {loading ? "Signing in…" : "Sign in"}
             </button>
           </form>
-
-          <div className="text-xs mt-5" style={{ color: C.muted }}>
-            Accounts are created by an admin, or self sign-up if enabled in Supabase Auth. New accounts default to the Viewer role.
-          </div>
         </Panel>
       </div>
     </div>
@@ -1036,10 +1032,10 @@ export default function BosPortal() {
   return (
     <div className="min-h-screen w-full flex" style={{ background: C.base }}>
       <div className="w-60 flex-shrink-0 flex flex-col" style={{ background: C.panel, borderRight: `1px solid ${C.border}` }}>
-        <div className="px-5 py-5 flex items-center gap-2" style={{ borderBottom: `1px solid ${C.border}` }}>
-          <div className="w-7 h-7 rounded-md flex items-center justify-center" style={{ background: "rgba(180,83,9,0.1)", border: `1px solid ${C.amber}` }}>
-            <Lock size={13} color={C.amber} />
-          </div>
+       <div className="px-5 py-5 flex items-center gap-2" style={{ borderBottom: `1px solid ${C.border}` }}>
+          <img src="/company_logo.png" alt="BOS logo" className="w-7 h-7 rounded-md object-contain" style={{ background: C.panel, border: `1px solid ${C.border}` }} />
+          <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase">BOS Internal</div>
+        </div>
           <div style={{ ...mono, color: C.text, letterSpacing: "0.08em" }} className="text-xs uppercase">BOS Internal</div>
         </div>
 
