@@ -118,7 +118,7 @@ export async function addLockitConfig(name, payload, createdBy) {
 // ---------------- Aopay ----------------
 export async function fetchAopayConfigs() {
   const { data, error } = await supabase
-    .from("lockit_configs")
+    .from("aopay_configs")
     .select("*, profiles ( name )")
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -127,7 +127,7 @@ export async function fetchAopayConfigs() {
 
 export async function addAopayConfig(name, payload, createdBy) {
   const { data, error } = await supabase
-    .from("lockit_configs")
+    .from("aopay_configs")
     .insert({ name, payload, created_by: createdBy })
     .select("*, profiles ( name )")
     .single();
